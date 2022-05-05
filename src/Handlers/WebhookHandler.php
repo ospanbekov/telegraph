@@ -58,7 +58,7 @@ abstract class WebhookHandler
 
         if (!$this->canHandle($action)) {
             report(TelegramWebhookException::invalidAction($action));
-            $this->reply('Invalid action');
+            $this->reply('Недопустимое действие');
 
             return;
         }
@@ -73,7 +73,7 @@ abstract class WebhookHandler
         if (!$this->canHandle($command)) {
             if ($this->message?->chat()?->type() === Chat::TYPE_PRIVATE) {
                 report(TelegramWebhookException::invalidCommand($command));
-                $this->chat->html("Unknown command")->send();
+                $this->chat->html("Неизвестная команда")->send();
             }
 
             return;

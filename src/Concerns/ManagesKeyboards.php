@@ -31,7 +31,8 @@ trait ManagesKeyboards
             $keyboard = Keyboard::fromArray($keyboard);
         }
 
-        $telegraph->data['reply_markup'] = [
+        $telegraph->data['reply_markup']    = [
+            'resize_keyboard' => true,
             $keyboard->getReplyMarkup() => $keyboard->toArray(),
         ];
 
