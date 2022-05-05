@@ -17,6 +17,8 @@ class Message implements Arrayable
 
     private ?User $from = null;
     private ?Chat $chat = null;
+    private ?Contact $contact = null;
+    private ?Location $location = null;
     private Keyboard $keyboard;
 
     private function __construct()
@@ -44,6 +46,16 @@ class Message implements Arrayable
         if (isset($data['chat'])) {
             /* @phpstan-ignore-next-line */
             $message->chat = Chat::fromArray($data['chat']);
+        }
+
+        if (isset($data['contact'])) {
+            /* @phpstan-ignore-next-line */
+            $message->contact = Contact::fromArray($data['contact']);
+        }
+
+        if (isset($data['location'])) {
+            /* @phpstan-ignore-next-line */
+            $message->location = Location::fromArray($data['location']);
         }
 
         if (isset($data['reply_markup']) && isset($data['reply_markup']['inline_keyboard'])) {
@@ -81,6 +93,16 @@ class Message implements Arrayable
         return $this->chat;
     }
 
+    public function contact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function location(): ?Location
+    {
+        return $this->location;
+    }
+
     public function keyboard(): Keyboard
     {
         return $this->keyboard;
@@ -94,6 +116,8 @@ class Message implements Arrayable
            'text' => $this->text,
            'from' => $this->from?->toArray(),
            'chat' => $this->chat?->toArray(),
+           'contact' => $this->contact?->toArray(),
+           'location' => $this->location?->toArray(),
            'keyboard' => $this->keyboard->isFilled() ? $this->keyboard->toArray() : null,
         ]);
     }

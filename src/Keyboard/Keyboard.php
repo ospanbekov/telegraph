@@ -11,11 +11,13 @@ class Keyboard implements Arrayable
 {
     /** @var Collection<array-key, Button> */
     protected Collection $buttons;
+    protected string $replyMarkup;
 
     public function __construct()
     {
         /* @phpstan-ignore-next-line  */
         $this->buttons = collect();
+        $this->replyMarkup = 'inline_keyboard';
     }
 
     public static function make(): Keyboard
@@ -59,6 +61,14 @@ class Keyboard implements Arrayable
 
                 if (array_key_exists("url", $button)) {
                     $rowButton = $rowButton->url($button['url']);
+                }
+
+                if (array_key_exists("request_contact", $button)) {
+                    $rowButton = $rowButton->requestContact($button['request_contact']);
+                }
+
+                if (array_key_exists("request_location", $button)) {
+                    $rowButton = $rowButton->requestLocation($button['request_location']);
                 }
 
                 $rowButtons[] = $rowButton;
@@ -167,6 +177,20 @@ class Keyboard implements Arrayable
         $clone->buttons = $clone->buttons->map(fn (Button $button) => $button->width(1));
 
         return $clone;
+    }
+
+    public function setReplyMarkup(string $replyMarkup): Keyboard
+    {
+        $clone = $this->clone();
+
+        $clone->replyMarkup = $replyMarkup;
+
+        return $clone;
+    }
+
+    public function getReplyMarkup(): string
+    {
+        return $this->replyMarkup;
     }
 
     public function isEmpty(): bool

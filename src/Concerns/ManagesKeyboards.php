@@ -32,7 +32,7 @@ trait ManagesKeyboards
         }
 
         $telegraph->data['reply_markup'] = [
-            'inline_keyboard' => $keyboard->toArray(),
+            $keyboard->getReplyMarkup() => $keyboard->toArray(),
         ];
 
         return $telegraph;
@@ -52,7 +52,7 @@ trait ManagesKeyboards
         if ($newKeyboard->isEmpty()) {
             $replyMarkup = '';
         } else {
-            $replyMarkup = ['inline_keyboard' => $newKeyboard->toArray()];
+            $replyMarkup = [$newKeyboard->getReplyMarkup() => $newKeyboard->toArray()];
         }
 
         $telegraph->endpoint = self::ENDPOINT_REPLACE_KEYBOARD;

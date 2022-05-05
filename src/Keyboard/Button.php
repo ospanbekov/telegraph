@@ -5,6 +5,8 @@ namespace DefStudio\Telegraph\Keyboard;
 class Button
 {
     private string $url;
+    private bool $requestContact;
+    private bool $requestLocation;
 
     /** @var string[] */
     private array $callbackData = [];
@@ -56,6 +58,20 @@ class Button
         return $this;
     }
 
+    public function requestContact(bool $requestContact): static
+    {
+        $this->requestContact = $requestContact;
+
+        return $this;
+    }
+
+    public function requestLocation(bool $requestLocation): static
+    {
+        $this->requestLocation = $requestLocation;
+
+        return $this;
+    }
+
     /**
      * @return string[]
      */
@@ -72,6 +88,20 @@ class Button
             return [
                 'text' => $this->label,
                 'url' => $this->url,
+            ];
+        }
+
+        if (isset($this->requestContact)) {
+            return [
+                'text' => $this->label,
+                'request_contact' => $this->requestContact,
+            ];
+        }
+
+        if (isset($this->requestLocation)) {
+            return [
+                'text' => $this->label,
+                'request_location' => $this->requestLocation,
             ];
         }
 

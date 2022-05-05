@@ -99,6 +99,32 @@ abstract class WebhookHandler
         }
     }
 
+    private function handleContact(): void
+    {
+        $this->extractContactData();
+
+        if (config('telegraph.debug_mode')) {
+            Log::debug('Telegraph webhook contact', $this->data->toArray());
+        }
+
+        $this->contact();
+    }
+
+    abstract public function contact();
+
+    private function handleLocation(): void
+    {
+        $this->extractLocationData();
+
+        if (config('telegraph.debug_mode')) {
+            Log::debug('Telegraph webhook location', $this->data->toArray());
+        }
+
+        $this->location();
+    }
+
+    abstract public function location();
+
     protected function canHandle(string $action): bool
     {
         if (!method_exists($this, $action)) {
@@ -151,6 +177,38 @@ abstract class WebhookHandler
         ]);
     }
 
+    protected function extractContactData(): void
+    {
+        /** @var TelegraphChat $chat */
+        $chat = $this->bot->chats()->where('chat_id', $this->request->input('message.chat.id'))->firstOrNew();
+
+        $this->chat = $chat;
+
+        assert($this->message !== null);
+
+        $this->messageId = $this->message->id();
+
+        $this->data = collect([
+            'contact' => $this->message->contact(),
+        ]);
+    }
+
+    protected function extractLocationData(): void
+    {
+        /** @var TelegraphChat $chat */
+        $chat = $this->bot->chats()->where('chat_id', $this->request->input('message.chat.id'))->firstOrNew();
+
+        $this->chat = $chat;
+
+        assert($this->message !== null);
+
+        $this->messageId = $this->message->id();
+
+        $this->data = collect([
+            'location' => $this->message->location(),
+        ]);
+    }
+
     protected function handleChatMessage(Stringable $text): void
     {
         // .. do nothing
@@ -181,6 +239,22 @@ abstract class WebhookHandler
         $this->bot = $bot;
 
         $this->request = $request;
+
+        if ($this->request->has('message.contact')) {
+            /* @phpstan-ignore-next-line */
+            $this->message = Message::fromArray($this->request->input('message'));
+            $this->handleContact();
+
+            return;
+        }
+
+        if ($this->request->has('message.location')) {
+            /* @phpstan-ignore-next-line */
+            $this->message = Message::fromArray($this->request->input('message'));
+            $this->handleLocation();
+
+            return;
+        }
 
         if ($this->request->has('message')) {
             /* @phpstan-ignore-next-line */
