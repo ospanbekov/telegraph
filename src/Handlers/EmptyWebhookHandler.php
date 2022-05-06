@@ -4,12 +4,12 @@ namespace DefStudio\Telegraph\Handlers;
 
 class EmptyWebhookHandler extends WebhookHandler
 {
-    public function contact()
+    protected function contact()
     {
         // TODO: Implement contact() method.
     }
 
-    public function location()
+    protected function location()
     {
         // TODO: Implement location() method.
     }

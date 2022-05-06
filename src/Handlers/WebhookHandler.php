@@ -110,7 +110,7 @@ abstract class WebhookHandler
         $this->contact();
     }
 
-    abstract public function contact();
+    abstract protected function contact();
 
     private function handleLocation(): void
     {
@@ -123,7 +123,7 @@ abstract class WebhookHandler
         $this->location();
     }
 
-    abstract public function location();
+    abstract protected function location();
 
     protected function canHandle(string $action): bool
     {
