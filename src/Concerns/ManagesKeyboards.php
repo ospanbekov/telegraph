@@ -38,6 +38,7 @@ trait ManagesKeyboards
         } else {
             $replyMarkup = [
                 'resize_keyboard' => true,
+                'one_time_keyboard' => true,
                 $keyboard->getReplyMarkup() => $keyboard->toArray(),
             ];
         }
