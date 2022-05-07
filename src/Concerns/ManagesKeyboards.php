@@ -19,7 +19,7 @@ trait ManagesKeyboards
     /**
      * @param array<array<array<string, string>>>|Keyboard|callable(Keyboard):Keyboard $keyboard
      */
-    public function keyboard(callable|array|Keyboard $keyboard): Telegraph
+    public function keyboard(callable|array|Keyboard $keyboard, bool $remove = false): Telegraph
     {
         $telegraph = clone $this;
 
@@ -31,10 +31,18 @@ trait ManagesKeyboards
             $keyboard = Keyboard::fromArray($keyboard);
         }
 
-        $telegraph->data['reply_markup']    = [
-            'resize_keyboard' => true,
-            $keyboard->getReplyMarkup() => $keyboard->toArray(),
-        ];
+        if ($remove) {
+            $replyMarkup = [
+                'remove_keyboard' => true,
+            ];
+        } else {
+            $replyMarkup = [
+                'resize_keyboard' => true,
+                $keyboard->getReplyMarkup() => $keyboard->toArray(),
+            ];
+        }
+
+        $telegraph->data['reply_markup'] = $replyMarkup;
 
         return $telegraph;
     }
