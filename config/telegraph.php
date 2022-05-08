@@ -16,8 +16,9 @@ return [
      *
      * For reference, see https://def-studio.github.io/telegraph/webhooks/overview
      */
-    'webhook_handler' => EmptyWebhookHandler::class,
-
+    'webhook_handler' => [
+        'default' => EmptyWebhookHandler::class,
+    ],
     /*
      * If enabled, Telegraph dumps received
      * webhook messages to logs

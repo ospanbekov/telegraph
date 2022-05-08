@@ -16,7 +16,9 @@ class WebhookController
         $bot = TelegraphBot::fromToken($token);
 
         /** @var class-string $handler */
-        $handler = config('telegraph.webhook_handler');
+        $handler = config('telegraph.webhook_handler.' . $token);
+
+        if (is_null($handler)) $handler = config('telegraph.webhook_handler.default');
 
         /** @var WebhookHandler $handler */
         $handler = app($handler);
